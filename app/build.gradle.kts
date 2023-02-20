@@ -38,4 +38,5 @@ dependencies {
     implementation(project(":core-network"))
     implementation(project(":core-player"))
     implementation(project(":feature-player-list"))
+    implementation(project(":feature-player-detail"))
 }

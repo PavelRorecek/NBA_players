@@ -5,13 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pavelrorecek.core.network.data.IoDispatcher
 import com.pavelrorecek.core.player.model.Player
+import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
+import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.RequestFirstPagePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.RequestNextPagePlayerListUseCase
-import com.pavelrorecek.feature.playerlist.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +25,7 @@ internal class PlayerListViewModel(
     private val requestFirstPage: RequestFirstPagePlayerListUseCase,
     private val requestNextPage: RequestNextPagePlayerListUseCase,
     private val observePlayerList: ObservePlayerListUseCase,
+    private val navigation: PlayerListNavigationController,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
@@ -53,9 +55,13 @@ internal class PlayerListViewModel(
     private fun toState(model: Player) = State.PlayerState(
         id = model.id,
         name = "${model.firstName} ${model.lastName}",
-        position = context.getString(R.string.player_position, model.position),
-        teamName = context.getString(R.string.player_team, model.team.name),
+        position = context.getString(R.string.player_list_position, model.position),
+        teamName = context.getString(R.string.player_list_team, model.team.name),
     )
+
+    fun onPlayer() {
+        navigation.goToPlayerDetail()
+    }
 
     fun onRefresh() {
         if (refreshJob != null) return

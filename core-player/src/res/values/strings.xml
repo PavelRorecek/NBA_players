@@ -1,5 +1,4 @@
 <resources>
-    <string name="failure">Loading players failed. Please try again.</string>
     <string name="player_list_position">Position: %s</string>
     <string name="player_list_team">Team: %s</string>
 </resources>

@@ -5,13 +5,13 @@ import app.cash.turbine.test
 import com.pavelrorecek.core.network.data.IoDispatcher
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.core.test.TestDispatcherRule
+import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Page
 import com.pavelrorecek.feature.playerlist.domain.RequestFirstPagePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.RequestNextPagePlayerListUseCase
-import com.pavelrorecek.feature.playerlist.R
 import io.kotest.matchers.shouldBe
 import io.mockk.clearMocks
 import io.mockk.coVerify
@@ -77,8 +77,8 @@ internal class PlayerListViewModelTest {
         }
         val viewModel = viewModel(
             context = mockk {
-                every { getString(R.string.player_position, "F") } returns "Position: F"
-                every { getString(R.string.player_team, "Lakers") } returns "Team: Lakers"
+                every { getString(R.string.player_list_position, "F") } returns "Position: F"
+                every { getString(R.string.player_list_team, "Lakers") } returns "Team: Lakers"
             },
             ioDispatcher = testDispatcherRule.testDispatcher,
             observePlayerList = observePlayerList,

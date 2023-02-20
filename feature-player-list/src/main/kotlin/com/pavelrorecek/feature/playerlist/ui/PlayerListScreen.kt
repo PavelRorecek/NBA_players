@@ -37,6 +37,7 @@ public fun PlayerListScreen() {
         state = state,
         onRefresh = viewModel::onRefresh,
         onEndReached = viewModel::onEndReached,
+        onPlayer = viewModel::onPlayer,
     )
 }
 
@@ -45,6 +46,7 @@ internal fun PlayerListScreen(
     state: PlayerListViewModel.State,
     onRefresh: () -> Unit,
     onEndReached: () -> Unit,
+    onPlayer: () -> Unit,
 ) {
     BaseScreen {
         val pullRefreshState = rememberPullRefreshState(false, onRefresh = onRefresh)
@@ -62,7 +64,7 @@ internal fun PlayerListScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp, horizontal = 16.dp)
-                                .clickable(onClick = {}),
+                                .clickable(onClick = onPlayer),
                         ) {
                             Column(
                                 modifier = Modifier.padding(8.dp),
@@ -103,6 +105,7 @@ private fun PlayerListWithItems() {
             state = PlayerListViewModel.State(),
             onRefresh = {},
             onEndReached = {},
+            onPlayer = {},
         )
     }
 }
