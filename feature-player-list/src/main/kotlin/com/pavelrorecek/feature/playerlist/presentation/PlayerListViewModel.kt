@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pavelrorecek.core.network.data.IoDispatcher
+import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
@@ -25,6 +26,7 @@ internal class PlayerListViewModel(
     private val requestFirstPage: RequestFirstPagePlayerListUseCase,
     private val requestNextPage: RequestNextPagePlayerListUseCase,
     private val observePlayerList: ObservePlayerListUseCase,
+    private val storePlayer: StoreCurrentPlayerUseCase,
     private val navigation: PlayerListNavigationController,
 ) : ViewModel() {
 
@@ -53,13 +55,14 @@ internal class PlayerListViewModel(
     }
 
     private fun toState(model: Player) = State.PlayerState(
-        id = model.id,
+        model = model,
         name = "${model.firstName} ${model.lastName}",
         position = context.getString(R.string.player_list_position, model.position),
         teamName = context.getString(R.string.player_list_team, model.team.name),
     )
 
-    fun onPlayer() {
+    fun onPlayer(player: Player) {
+        storePlayer(player)
         navigation.goToPlayerDetail()
     }
 
@@ -90,7 +93,7 @@ internal class PlayerListViewModel(
     ) {
 
         data class PlayerState(
-            val id: Player.Id,
+            val model: Player,
             val name: String,
             val position: String,
             val teamName: String,

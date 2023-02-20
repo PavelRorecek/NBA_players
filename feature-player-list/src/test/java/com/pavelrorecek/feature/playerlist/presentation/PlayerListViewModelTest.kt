@@ -3,10 +3,12 @@ package com.pavelrorecek.feature.playerlist.presentation
 import android.content.Context
 import app.cash.turbine.test
 import com.pavelrorecek.core.network.data.IoDispatcher
+import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.core.test.TestDispatcherRule
 import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
+import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Page
@@ -17,6 +19,7 @@ import io.mockk.clearMocks
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -56,23 +59,16 @@ internal class PlayerListViewModelTest {
 
     @Test
     fun `should map loaded player list to state`() = runTest {
+        val player = Player(
+            id = Player.Id(value = 42),
+            firstName = "John",
+            lastName = "Doe",
+            position = "F",
+            team = Player.Team(name = "Lakers"),
+        )
         val observePlayerList: ObservePlayerListUseCase = mockk {
             every { this@mockk.invoke() } returns flowOf(
-                Loaded(
-                    pages = listOf(
-                        Page(
-                            playerList = listOf(
-                                Player(
-                                    id = Player.Id(value = 42),
-                                    firstName = "John",
-                                    lastName = "Doe",
-                                    position = "F",
-                                    team = Player.Team(name = "Lakers"),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
+                Loaded(pages = listOf(Page(playerList = listOf(player)))),
             )
         }
         val viewModel = viewModel(
@@ -86,7 +82,7 @@ internal class PlayerListViewModelTest {
 
         viewModel.state.test {
             awaitItem().playerList.single() shouldBe PlayerListViewModel.State.PlayerState(
-                id = Player.Id(value = 42),
+                model = player,
                 name = "John Doe",
                 position = "Position: F",
                 teamName = "Team: Lakers",
@@ -158,6 +154,33 @@ internal class PlayerListViewModelTest {
         coVerify { request() }
     }
 
+    @Test
+    fun `should store player on navigate`() = runTest {
+        val player: Player = mockk()
+        val storePlayer: StoreCurrentPlayerUseCase = mockk(relaxed = true)
+        val viewModel = viewModel(
+            ioDispatcher = testDispatcherRule.testDispatcher,
+            storePlayer = storePlayer,
+        )
+
+        viewModel.onPlayer(player)
+
+        verify { storePlayer(player) }
+    }
+
+    @Test
+    fun `should navigate`() = runTest {
+        val navigation: PlayerListNavigationController = mockk(relaxUnitFun = true)
+        val viewModel = viewModel(
+            ioDispatcher = testDispatcherRule.testDispatcher,
+            navigation = navigation,
+        )
+
+        viewModel.onPlayer(mockk())
+
+        verify { navigation.goToPlayerDetail() }
+    }
+
     private fun viewModel(
         context: Context = mockk { every { getString(any(), any()) } returns "" },
         ioDispatcher: CoroutineContext,
@@ -166,11 +189,15 @@ internal class PlayerListViewModelTest {
         observePlayerList: ObservePlayerListUseCase = mockk {
             every { this@mockk.invoke() } returns flowOf(Loaded(emptyList()))
         },
+        storePlayer: StoreCurrentPlayerUseCase = mockk(relaxed = true),
+        navigation: PlayerListNavigationController = mockk(relaxUnitFun = true),
     ) = PlayerListViewModel(
         context = context,
         ioDispatcher = IoDispatcher(ioDispatcher),
         requestFirstPage = requestFirstPage,
         requestNextPage = requestNextPage,
         observePlayerList = observePlayerList,
+        storePlayer = storePlayer,
+        navigation = navigation,
     )
 }

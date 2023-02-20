@@ -23,11 +23,11 @@ public fun PlayerDetailScreen() {
 
 @Composable
 internal fun PlayerDetailScreen(
-    @Suppress("UNUSED_PARAMETER") state: PlayerDetailViewModel.State,
+    state: PlayerDetailViewModel.State,
 ) {
     BaseScreen {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Player detail")
+            Text(text = state.message)
         }
     }
 }

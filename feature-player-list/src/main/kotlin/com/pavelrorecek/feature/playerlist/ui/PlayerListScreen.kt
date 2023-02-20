@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pavelrorecek.core.design.AppTheme
 import com.pavelrorecek.core.design.BaseScreen
+import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.feature.playerlist.presentation.PlayerListViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -46,7 +47,7 @@ internal fun PlayerListScreen(
     state: PlayerListViewModel.State,
     onRefresh: () -> Unit,
     onEndReached: () -> Unit,
-    onPlayer: () -> Unit,
+    onPlayer: (Player) -> Unit,
 ) {
     BaseScreen {
         val pullRefreshState = rememberPullRefreshState(false, onRefresh = onRefresh)
@@ -59,12 +60,12 @@ internal fun PlayerListScreen(
 
             LazyColumn(state = listState) {
                 state.playerList.forEach {
-                    item(key = it.id.value) {
+                    item(key = it.model.id.value) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp, horizontal = 16.dp)
-                                .clickable(onClick = onPlayer),
+                                .clickable(onClick = { onPlayer(it.model) }),
                         ) {
                             Column(
                                 modifier = Modifier.padding(8.dp),
