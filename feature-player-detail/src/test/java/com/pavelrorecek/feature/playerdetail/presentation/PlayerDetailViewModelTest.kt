@@ -15,8 +15,30 @@ import org.junit.Test
 internal class PlayerDetailViewModelTest {
 
     @Test
+    fun `should map player name to title`() {
+        val context: Context = mockk {
+            every { getString(any(), any()) } returns ""
+            every { getString(any(), any(), any()) } returns ""
+            every { getString(R.string.player_detail_fullname, "John", "Doe") } returns "John Doe"
+        }
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(
+                firstName = "John",
+                lastName = "Doe",
+            )
+        }
+        val viewModel = viewModel(
+            context = context,
+            loadPlayer = loadPlayer,
+        )
+
+        viewModel.state.value.title shouldBe "John Doe"
+    }
+
+    @Test
     fun `should map player to state`() {
         val context: Context = mockk {
+            every { getString(any(), any(), any()) } returns ""
             every { getString(R.string.player_detail_firstname, "John") } returns "Firstname: John"
             every { getString(R.string.player_detail_lastname, "Doe") } returns "Lastname: Doe"
             every { getString(R.string.player_detail_position, "F") } returns "Position: F"

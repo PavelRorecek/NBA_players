@@ -1,4 +1,5 @@
 <resources>
+    <string name="player_detail_fullname">%s %s</string>
     <string name="player_detail_firstname">Firstname: %s</string>
     <string name="player_detail_lastname">Lastname: %s</string>
     <string name="player_detail_position">Position: %s</string>

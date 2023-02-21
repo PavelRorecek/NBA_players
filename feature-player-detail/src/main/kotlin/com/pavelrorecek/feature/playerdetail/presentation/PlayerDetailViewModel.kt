@@ -21,6 +21,11 @@ internal class PlayerDetailViewModel(
         val player = loadPlayer()
         _state = MutableStateFlow(
             State(
+                title = context.getString(
+                    R.string.player_detail_fullname,
+                    player.firstName,
+                    player.lastName,
+                ),
                 firstName = context.getString(R.string.player_detail_firstname, player.firstName),
                 lastName = context.getString(R.string.player_detail_lastname, player.lastName),
                 position = context.getString(R.string.player_detail_position, player.position),
@@ -41,6 +46,7 @@ internal class PlayerDetailViewModel(
     }
 
     data class State(
+        val title: String,
         val firstName: String,
         val lastName: String,
         val position: String,

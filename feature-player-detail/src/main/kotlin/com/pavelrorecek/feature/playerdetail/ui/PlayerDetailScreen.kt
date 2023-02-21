@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -34,29 +36,38 @@ internal fun PlayerDetailScreen(
     onTeam: () -> Unit,
 ) {
     BaseScreen {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(text = state.firstName)
-            Text(text = state.lastName)
-            Text(text = state.position)
-            Text(text = state.height)
-            Text(text = state.weight)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onTeam),
-            ) {
-                Box(
+        Scaffold(
+            topBar = {
+                TopAppBar(title = { Text(text = state.title) })
+            },
+            content = { padding ->
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center,
+                        .padding(padding)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(text = state.team)
+                    Text(text = state.firstName)
+                    Text(text = state.lastName)
+                    Text(text = state.position)
+                    Text(text = state.height)
+                    Text(text = state.weight)
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onTeam),
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(text = state.team)
+                        }
+                    }
                 }
-            }
-        }
+            },
+        )
     }
 }
