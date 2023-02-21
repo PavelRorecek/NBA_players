@@ -18,7 +18,10 @@ internal fun Project.configureCompose(
         }
 
         kotlinOptions {
-            freeCompilerArgs += "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
+            freeCompilerArgs += listOf(
+                "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
+                "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            )
         }
 
         dependencies {
@@ -30,6 +33,7 @@ internal fun Project.configureCompose(
             "implementation"("androidx.compose.material:material:1.4.0-alpha03")
             "debugImplementation"("androidx.compose.ui:ui-tooling")
             "debugImplementation"("androidx.compose.ui:ui-test-manifest")
+            "implementation"("com.google.accompanist:accompanist-navigation-animation:0.27.1")
         }
     }
 }

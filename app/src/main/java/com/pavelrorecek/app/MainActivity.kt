@@ -3,6 +3,8 @@ package com.pavelrorecek.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -13,9 +15,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.pavelrorecek.app.Screen.PLAYER_DETAIL
 import com.pavelrorecek.app.Screen.PLAYER_LIST
 import com.pavelrorecek.app.Screen.TEAM_DETAIL
@@ -38,22 +40,24 @@ public class MainActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             AppTheme {
-                val navController = rememberNavController()
+                val navController = rememberAnimatedNavController()
 
-                NavHost(
+                AnimatedNavHost(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.background),
                     navController = navController,
                     startDestination = PLAYER_LIST.id,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None },
                 ) {
                     composable(PLAYER_LIST.id) { PlayerListScreen() }
                     composable(PLAYER_DETAIL.id) { PlayerDetailScreen() }
                     composable(TEAM_DETAIL.id) { TeamDetailScreen() }
                 }
 
+                // Listen to navigateTo events and navigate
                 val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
-
                 DisposableEffect(lifecycleOwner) {
                     var navigationJob: Job? = null
                     val lifecycle = lifecycleOwner.value.lifecycle
