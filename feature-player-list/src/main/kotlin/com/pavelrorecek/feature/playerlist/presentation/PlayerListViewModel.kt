@@ -30,7 +30,9 @@ internal class PlayerListViewModel(
     private val navigation: PlayerListNavigationController,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(State())
+    private val _state = MutableStateFlow(
+        State(title = context.getString(R.string.player_list_title))
+    )
     val state: StateFlow<State> = _state
 
     private var refreshJob: Job? = null
@@ -88,6 +90,7 @@ internal class PlayerListViewModel(
     }
 
     data class State(
+        val title: String,
         val playerList: List<PlayerState> = emptyList(),
         val isLoadingVisible: Boolean = true,
     ) {
