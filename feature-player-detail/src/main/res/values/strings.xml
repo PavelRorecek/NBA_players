@@ -1,0 +1,8 @@
+<resources>
+    <string name="player_detail_firstname">Firstname: %s</string>
+    <string name="player_detail_lastname">Lastname: %s</string>
+    <string name="player_detail_position">Position: %s</string>
+    <string name="player_detail_height">Height: %d feet %d inches</string>
+    <string name="player_detail_weight">Weight: %d pounds</string>
+    <string name="player_detail_team">Team: %s</string>
+</resources>

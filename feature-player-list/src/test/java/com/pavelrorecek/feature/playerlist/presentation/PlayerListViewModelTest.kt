@@ -5,6 +5,8 @@ import app.cash.turbine.test
 import com.pavelrorecek.core.network.data.IoDispatcher
 import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
+import com.pavelrorecek.core.player.model.player
+import com.pavelrorecek.core.player.model.team
 import com.pavelrorecek.core.test.TestDispatcherRule
 import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
@@ -59,12 +61,12 @@ internal class PlayerListViewModelTest {
 
     @Test
     fun `should map loaded player list to state`() = runTest {
-        val player = Player(
+        val player = player(
             id = Player.Id(value = 42),
             firstName = "John",
             lastName = "Doe",
             position = "F",
-            team = Player.Team(name = "Lakers"),
+            team = team(name = "Lakers"),
         )
         val observePlayerList: ObservePlayerListUseCase = mockk {
             every { this@mockk.invoke() } returns flowOf(
@@ -132,14 +134,12 @@ internal class PlayerListViewModelTest {
                         pages = listOf(
                             Page(
                                 playerList = listOf(
-                                    Player(
+                                    player(
                                         id = Player.Id(value = 42),
                                         firstName = "John",
                                         lastName = "Doe",
                                         position = "F",
-                                        team = Player.Team(
-                                            name = "Lakers",
-                                        ),
+                                        team = team(name = "Lakers"),
                                     ),
                                 ),
                             ),

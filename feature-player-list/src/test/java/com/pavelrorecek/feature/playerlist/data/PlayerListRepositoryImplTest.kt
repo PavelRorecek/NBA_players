@@ -52,6 +52,9 @@ internal class PlayerListRepositoryImplTest {
                         team = PlayerListResponseDto.TeamDto(
                             name = "Lakers",
                         ),
+                        heightFeet = 5,
+                        heightInches = 11,
+                        weightPounds = 42,
                     ),
                 ),
             )
@@ -69,6 +72,9 @@ internal class PlayerListRepositoryImplTest {
                             firstName = "LeBron",
                             lastName = "James",
                             position = "F",
+                            heightFeet = 5,
+                            heightInches = 11,
+                            weightPounds = 42,
                             team = Player.Team(
                                 name = "Lakers",
                             ),
@@ -103,6 +109,9 @@ internal class PlayerListRepositoryImplTest {
                         team = PlayerListResponseDto.TeamDto(
                             name = "Lakers",
                         ),
+                        heightFeet = 5,
+                        heightInches = 11,
+                        weightPounds = 42,
                     ),
                 ),
             )
@@ -123,6 +132,9 @@ internal class PlayerListRepositoryImplTest {
                                 firstName = "LeBron",
                                 lastName = "James",
                                 position = "F",
+                                heightFeet = 5,
+                                heightInches = 11,
+                                weightPounds = 42,
                                 team = Player.Team(
                                     name = "Lakers",
                                 ),

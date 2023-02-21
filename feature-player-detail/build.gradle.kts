@@ -12,4 +12,5 @@ dependencies {
     implementation(project(":core-network"))
     implementation(project(":core-player"))
     testImplementation(project(":core-test"))
+    testImplementation(project(":core-player-fixtures"))
 }

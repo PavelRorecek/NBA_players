@@ -3,6 +3,7 @@ package com.pavelrorecek.app
 import android.app.Application
 import com.pavelrorecek.core.network.di.coreNetworkModule
 import com.pavelrorecek.core.player.di.corePlayerModule
+import com.pavelrorecek.feature.playerdetail.PlayerDetailNavigationController
 import com.pavelrorecek.feature.playerdetail.di.featurePlayerDetailModule
 import com.pavelrorecek.feature.playerlist.di.featurePlayerListModule
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
@@ -36,5 +37,6 @@ public class MainApplication : Application() {
 private val coreNavigationModule = module {
     singleOf(::NavigationController) binds arrayOf(
         PlayerListNavigationController::class,
+        PlayerDetailNavigationController::class,
     )
 }

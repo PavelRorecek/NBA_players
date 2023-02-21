@@ -35,8 +35,11 @@ internal class PlayerListRepositoryImpl(
             id = dto.id?.let(Player::Id) ?: return null,
             firstName = dto.firstName ?: return null,
             lastName = dto.lastName ?: return null,
-            position = dto.position.orEmpty(),
-            team = Player.Team(name = dto.team?.name ?: return null),
+            position = dto.position,
+            heightFeet = dto.heightFeet,
+            heightInches = dto.heightInches,
+            weightPounds = dto.weightPounds,
+            team = Player.Team(name = dto.team?.name),
         )
     }
 
