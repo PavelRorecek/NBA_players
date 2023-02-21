@@ -19,6 +19,7 @@ internal class TeamDetailViewModel(
         val team = loadPlayer().team
         _state = MutableStateFlow(
             State(
+                title = team.name.orEmpty(),
                 city = context.getString(R.string.team_detail_city, team.city),
                 conference = context.getString(R.string.team_detail_conference, team.conference),
                 abbreviation = context.getString(
@@ -34,6 +35,7 @@ internal class TeamDetailViewModel(
     }
 
     data class State(
+        val title: String,
         val abbreviation: String,
         val city: String,
         val conference: String,

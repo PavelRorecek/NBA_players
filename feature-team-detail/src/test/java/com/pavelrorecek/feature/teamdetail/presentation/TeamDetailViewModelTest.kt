@@ -13,6 +13,16 @@ import org.junit.Test
 internal class TeamDetailViewModelTest {
 
     @Test
+    fun `should map team name to title`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(team = team(name = "Lakers"))
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.title shouldBe "Lakers"
+    }
+
+    @Test
     fun `should map team to state`() {
         val context: Context = mockk {
             every {
@@ -46,7 +56,7 @@ internal class TeamDetailViewModelTest {
                 ),
             )
         }
-        val viewModel = TeamDetailViewModel(
+        val viewModel = viewModel(
             context = context,
             loadPlayer = loadPlayer,
         )
@@ -60,4 +70,14 @@ internal class TeamDetailViewModelTest {
             name shouldBe "Name: Lakers"
         }
     }
+
+    private fun viewModel(
+        context: Context = mockk { every { getString(any(), any()) } returns "" },
+        loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player()
+        },
+    ) = TeamDetailViewModel(
+        context = context,
+        loadPlayer = loadPlayer,
+    )
 }
