@@ -68,21 +68,21 @@ internal fun PlayerListScreen(
                     val listState = rememberLazyListState()
 
                     LazyColumn(state = listState, contentPadding = PaddingValues(vertical = 8.dp)) {
-                        state.playerList.forEach {
-                            item(key = it.model.id.value) {
+                        state.playerList.forEach { player ->
+                            item(key = player.model.id.value) {
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 8.dp, horizontal = 16.dp)
-                                        .clickable(onClick = { onPlayer(it.model) }),
+                                        .clickable(onClick = { onPlayer(player.model) }),
                                 ) {
                                     Column(
                                         modifier = Modifier.padding(8.dp),
                                     ) {
-                                        Text(text = it.name, fontWeight = Bold)
+                                        Text(text = player.name, fontWeight = Bold)
                                         Spacer(modifier = Modifier.height(8.dp))
-                                        Text(text = it.position)
-                                        Text(text = it.teamName)
+                                        if (player.isPositionVisible) Text(text = player.position)
+                                        Text(text = player.teamName)
                                     }
                                 }
                             }
@@ -102,9 +102,9 @@ internal fun PlayerListScreen(
                     }
                     if (!listState.canScrollForward) onEndReached()
                     PullRefreshIndicator(
-                        false,
-                        pullRefreshState,
-                        Modifier.align(Alignment.TopCenter),
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        refreshing = false,
+                        state = pullRefreshState,
                     )
                 }
             },

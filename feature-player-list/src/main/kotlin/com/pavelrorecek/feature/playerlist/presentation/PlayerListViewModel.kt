@@ -31,7 +31,7 @@ internal class PlayerListViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        State(title = context.getString(R.string.player_list_title))
+        State(title = context.getString(R.string.player_list_title)),
     )
     val state: StateFlow<State> = _state
 
@@ -60,6 +60,7 @@ internal class PlayerListViewModel(
         model = model,
         name = "${model.firstName} ${model.lastName}",
         position = context.getString(R.string.player_list_position, model.position),
+        isPositionVisible = !model.position.isNullOrEmpty(),
         teamName = context.getString(R.string.player_list_team, model.team.name),
     )
 
@@ -99,6 +100,7 @@ internal class PlayerListViewModel(
             val model: Player,
             val name: String,
             val position: String,
+            val isPositionVisible: Boolean,
             val teamName: String,
         )
     }

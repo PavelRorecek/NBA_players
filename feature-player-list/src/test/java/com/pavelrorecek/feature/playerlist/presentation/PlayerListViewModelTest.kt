@@ -93,12 +93,38 @@ internal class PlayerListViewModelTest {
             observePlayerList = observePlayerList,
         )
 
-        viewModel.state.value.playerList.single() shouldBe PlayerListViewModel.State.PlayerState(
-            model = player,
-            name = "John Doe",
-            position = "Position: F",
-            teamName = "Team: Lakers",
-        )
+        viewModel.state.value.playerList.single().run {
+            model shouldBe player
+            name shouldBe "John Doe"
+            position shouldBe "Position: F"
+            teamName shouldBe "Team: Lakers"
+        }
+    }
+
+    @Test
+    fun `should show player position when it is not missing`() = runTest {
+        val player = player(position = "F")
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(
+                Loaded(pages = listOf(Page(playerList = listOf(player)))),
+            )
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.playerList.single().isPositionVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide player position when it is missing`() = runTest {
+        val player = player(position = "")
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(
+                Loaded(pages = listOf(Page(playerList = listOf(player)))),
+            )
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.playerList.single().isPositionVisible shouldBe false
     }
 
     @Test

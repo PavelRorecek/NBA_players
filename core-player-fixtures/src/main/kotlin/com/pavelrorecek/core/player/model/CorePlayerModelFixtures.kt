@@ -22,7 +22,7 @@ public fun player(
     id: Player.Id = Player.Id(value = 0),
     firstName: String = "John",
     lastName: String = "Doe",
-    position: String = "F",
+    position: String? = "F",
     heightFeet: Int = 5,
     heightInches: Int = 11,
     weightPounds: Int = 42,
