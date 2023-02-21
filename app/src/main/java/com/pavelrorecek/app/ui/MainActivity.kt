@@ -1,4 +1,4 @@
-package com.pavelrorecek.app
+package com.pavelrorecek.app.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,9 +18,9 @@ import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.pavelrorecek.app.Screen.PLAYER_DETAIL
-import com.pavelrorecek.app.Screen.PLAYER_LIST
-import com.pavelrorecek.app.Screen.TEAM_DETAIL
+import com.pavelrorecek.app.ui.Screen.PLAYER_DETAIL
+import com.pavelrorecek.app.ui.Screen.PLAYER_LIST
+import com.pavelrorecek.app.ui.Screen.TEAM_DETAIL
 import com.pavelrorecek.core.design.AppTheme
 import com.pavelrorecek.feature.playerdetail.ui.PlayerDetailScreen
 import com.pavelrorecek.feature.playerlist.ui.PlayerListScreen

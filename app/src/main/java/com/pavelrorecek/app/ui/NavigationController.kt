@@ -1,7 +1,7 @@
-package com.pavelrorecek.app
+package com.pavelrorecek.app.ui
 
-import com.pavelrorecek.app.Screen.PLAYER_DETAIL
-import com.pavelrorecek.app.Screen.TEAM_DETAIL
+import com.pavelrorecek.app.ui.Screen.PLAYER_DETAIL
+import com.pavelrorecek.app.ui.Screen.TEAM_DETAIL
 import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import kotlinx.coroutines.CoroutineScope
