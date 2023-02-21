@@ -29,12 +29,15 @@ internal class PlayerDetailViewModel(
                 firstName = context.getString(R.string.player_detail_firstname, player.firstName),
                 lastName = context.getString(R.string.player_detail_lastname, player.lastName),
                 position = context.getString(R.string.player_detail_position, player.position),
+                isPositionVisible = !player.position.isNullOrEmpty(),
                 height = context.getString(
                     R.string.player_detail_height,
                     player.heightFeet,
                     player.heightInches,
                 ),
+                isHeightVisible = player.heightFeet != null && player.heightInches != null,
                 weight = context.getString(R.string.player_detail_weight, player.weightPounds),
+                isWeightVisible = player.weightPounds != null,
                 team = context.getString(R.string.player_detail_team, player.team.name),
             ),
         )
@@ -50,8 +53,11 @@ internal class PlayerDetailViewModel(
         val firstName: String,
         val lastName: String,
         val position: String,
+        val isPositionVisible: Boolean,
         val height: String,
+        val isHeightVisible: Boolean,
         val weight: String,
+        val isWeightVisible: Boolean,
         val team: String,
     )
 }

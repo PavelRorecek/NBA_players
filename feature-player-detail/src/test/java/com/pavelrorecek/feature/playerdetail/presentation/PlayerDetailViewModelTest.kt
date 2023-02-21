@@ -75,6 +75,66 @@ internal class PlayerDetailViewModelTest {
     }
 
     @Test
+    fun `should show position when it is not missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(position = "F")
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isPositionVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide position when it is missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(position = "")
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isPositionVisible shouldBe false
+    }
+
+    @Test
+    fun `should show height when it is not missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(heightFeet = 1, heightInches = 2)
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isHeightVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide height when it is missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(heightFeet = null, heightInches = null)
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isHeightVisible shouldBe false
+    }
+
+    @Test
+    fun `should show weight when it is not missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(weightPounds = 42)
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isWeightVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide weight when it is missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(weightPounds = null)
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isWeightVisible shouldBe false
+    }
+
+    @Test
     fun `should navigate to team detail`() {
         val navigation: PlayerDetailNavigationController = mockk(relaxUnitFun = true)
         val viewModel = viewModel(navigation = navigation)

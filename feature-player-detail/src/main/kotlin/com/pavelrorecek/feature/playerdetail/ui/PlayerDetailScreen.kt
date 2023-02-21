@@ -49,9 +49,9 @@ internal fun PlayerDetailScreen(
                 ) {
                     Text(text = state.firstName)
                     Text(text = state.lastName)
-                    Text(text = state.position)
-                    Text(text = state.height)
-                    Text(text = state.weight)
+                    if (state.isPositionVisible) Text(text = state.position)
+                    if (state.isHeightVisible) Text(text = state.height)
+                    if (state.isWeightVisible) Text(text = state.weight)
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

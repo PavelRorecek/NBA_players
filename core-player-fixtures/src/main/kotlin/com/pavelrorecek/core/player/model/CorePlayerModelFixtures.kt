@@ -23,9 +23,9 @@ public fun player(
     firstName: String = "John",
     lastName: String = "Doe",
     position: String? = "F",
-    heightFeet: Int = 5,
-    heightInches: Int = 11,
-    weightPounds: Int = 42,
+    heightFeet: Int? = 5,
+    heightInches: Int? = 11,
+    weightPounds: Int? = 42,
     team: Team = team(),
 ): Player = Player(
     id = id,
