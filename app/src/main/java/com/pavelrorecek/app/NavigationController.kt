@@ -1,7 +1,8 @@
 package com.pavelrorecek.app
 
 import com.pavelrorecek.app.Screen.PLAYER_DETAIL
-import com.pavelrorecek.feature.playerdetail.PlayerDetailNavigationController
+import com.pavelrorecek.app.Screen.TEAM_DETAIL
+import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +19,10 @@ internal class NavigationController :
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun goToPlayerDetail() {
-        scope.launch {
-            navigateTo.emit(PLAYER_DETAIL)
-        }
+        scope.launch { navigateTo.emit(PLAYER_DETAIL) }
     }
 
     override fun goToTeamDetail() {
-        // TODO
+        scope.launch { navigateTo.emit(TEAM_DETAIL) }
     }
 }

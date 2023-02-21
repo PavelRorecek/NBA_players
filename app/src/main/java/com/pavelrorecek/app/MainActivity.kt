@@ -16,10 +16,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.pavelrorecek.app.Screen.PLAYER_DETAIL
 import com.pavelrorecek.app.Screen.PLAYER_LIST
+import com.pavelrorecek.app.Screen.TEAM_DETAIL
 import com.pavelrorecek.core.design.AppTheme
 import com.pavelrorecek.feature.playerdetail.ui.PlayerDetailScreen
 import com.pavelrorecek.feature.playerlist.ui.PlayerListScreen
+import com.pavelrorecek.feature.teamdetail.ui.TeamDetailScreen
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -44,20 +48,26 @@ public class MainActivity : ComponentActivity(), KoinComponent {
                     startDestination = PLAYER_LIST.id,
                 ) {
                     composable(PLAYER_LIST.id) { PlayerListScreen() }
-                    composable(Screen.PLAYER_DETAIL.id) { PlayerDetailScreen() }
+                    composable(PLAYER_DETAIL.id) { PlayerDetailScreen() }
+                    composable(TEAM_DETAIL.id) { TeamDetailScreen() }
                 }
 
                 val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
                 DisposableEffect(lifecycleOwner) {
+                    var navigationJob: Job? = null
                     val lifecycle = lifecycleOwner.value.lifecycle
                     val observer = LifecycleEventObserver { owner, event ->
                         if (event == Lifecycle.Event.ON_RESUME) {
-                            owner.lifecycleScope.launch {
+                            navigationJob = owner.lifecycleScope.launch {
                                 navigationController.navigateTo.filterNotNull().collect {
                                     navController.navigate(it.id)
                                 }
                             }
+                        }
+                        if (event == Lifecycle.Event.ON_PAUSE) {
+                            navigationJob?.cancel()
+                            navigationJob = null
                         }
                     }
 

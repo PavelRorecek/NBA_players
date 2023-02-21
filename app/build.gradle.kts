@@ -39,4 +39,5 @@ dependencies {
     implementation(project(":core-player"))
     implementation(project(":feature-player-list"))
     implementation(project(":feature-player-detail"))
+    implementation(project(":feature-team-detail"))
 }

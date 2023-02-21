@@ -3,8 +3,18 @@ package com.pavelrorecek.core.player.model
 import com.pavelrorecek.core.player.model.Player.Team
 
 public fun team(
+    abbreviation: String = "LAL",
+    city: String = "Los Angeles",
+    conference: String = "West",
+    division: String = "Pacific",
+    fullName: String = "Los Angeles Lakers",
     name: String = "Lakers",
 ): Team = Team(
+    abbreviation = abbreviation,
+    city = city,
+    conference = conference,
+    division = division,
+    fullName = fullName,
     name = name,
 )
 

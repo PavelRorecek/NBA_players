@@ -1,4 +1,4 @@
-package com.pavelrorecek.feature.playerdetail
+package com.pavelrorecek.feature.playerdetail.domain
 
 public interface PlayerDetailNavigationController {
 

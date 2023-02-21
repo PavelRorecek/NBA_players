@@ -15,5 +15,10 @@ public data class Player(
 
     public data class Team(
         val name: String?,
+        val fullName: String?,
+        val abbreviation: String?,
+        val city: String?,
+        val conference: String?,
+        val division: String?,
     )
 }

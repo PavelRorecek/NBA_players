@@ -2,10 +2,10 @@ package com.pavelrorecek.feature.playerdetail.presentation
 
 import android.content.Context
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
-import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.core.player.model.player
-import com.pavelrorecek.feature.playerdetail.PlayerDetailNavigationController
+import com.pavelrorecek.core.player.model.team
 import com.pavelrorecek.feature.playerdetail.R
+import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +24,7 @@ internal class PlayerDetailViewModelTest {
                 getString(R.string.player_detail_height, 5, 11)
             } returns "Height: 5 feet 11 inches"
             every { getString(R.string.player_detail_weight, 42) } returns "Weight: 42"
-            every { getString(R.string.player_detail_team, "Lakers") } returns "Team Lakers"
+            every { getString(R.string.player_detail_team, "Lakers") } returns "Team: Lakers"
         }
         val loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player(
@@ -34,7 +34,7 @@ internal class PlayerDetailViewModelTest {
                 heightFeet = 5,
                 heightInches = 11,
                 weightPounds = 42,
-                team = Player.Team(name = "Lakers"),
+                team = team(name = "Lakers"),
             )
         }
         val viewModel = viewModel(
@@ -48,7 +48,7 @@ internal class PlayerDetailViewModelTest {
             position shouldBe "Position: F"
             height shouldBe "Height: 5 feet 11 inches"
             weight shouldBe "Weight: 42"
-            team shouldBe "Team Lakers"
+            team shouldBe "Team: Lakers"
         }
     }
 

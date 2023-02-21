@@ -3,8 +3,8 @@ package com.pavelrorecek.feature.playerdetail.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
-import com.pavelrorecek.feature.playerdetail.PlayerDetailNavigationController
 import com.pavelrorecek.feature.playerdetail.R
+import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
