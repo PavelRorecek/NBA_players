@@ -3,7 +3,7 @@ package com.pavelrorecek.feature.playerlist.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pavelrorecek.core.network.data.IoDispatcher
+import com.pavelrorecek.core.network.platform.AppDispatchers
 import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.feature.playerlist.R
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 internal class PlayerListViewModel(
     private val context: Context,
-    private val ioDispatcher: IoDispatcher,
+    private val dispatchers: AppDispatchers,
     private val requestFirstPage: RequestFirstPagePlayerListUseCase,
     private val requestNextPage: RequestNextPagePlayerListUseCase,
     private val observePlayerList: ObservePlayerListUseCase,
@@ -39,8 +39,8 @@ internal class PlayerListViewModel(
     private var nextPageRequestJob: Job? = null
 
     init {
-        viewModelScope.launch(ioDispatcher.value) { requestFirstPage() }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) { requestFirstPage() }
+        viewModelScope.launch(dispatchers.main) {
             observePlayerList().collect { result ->
                 val playerList = when (result) {
                     is Loading -> result.previousPages
@@ -72,7 +72,7 @@ internal class PlayerListViewModel(
 
     fun onRefresh() {
         if (refreshJob != null) return
-        refreshJob = viewModelScope.launch(ioDispatcher.value) {
+        refreshJob = viewModelScope.launch(dispatchers.io) {
             requestFirstPage()
             refreshJob = null
         }
@@ -80,7 +80,7 @@ internal class PlayerListViewModel(
 
     fun onEndReached() {
         if (nextPageRequestJob != null) return
-        nextPageRequestJob = viewModelScope.launch(ioDispatcher.value) {
+        nextPageRequestJob = viewModelScope.launch(dispatchers.io) {
             val isAtLeastOnePageLoaded = (observePlayerList().first() as? Loaded)
                 ?.pages
                 .orEmpty()

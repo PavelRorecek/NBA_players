@@ -1,7 +1,7 @@
 package com.pavelrorecek.feature.playerlist.presentation
 
 import android.content.Context
-import com.pavelrorecek.core.network.data.IoDispatcher
+import com.pavelrorecek.core.network.platform.AppDispatchers
 import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.core.player.model.player
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
-import kotlin.coroutines.CoroutineContext
 
 internal class PlayerListViewModelTest {
 
@@ -47,10 +46,7 @@ internal class PlayerListViewModelTest {
     fun `should request first page initially`() = runTest {
         val request: RequestFirstPagePlayerListUseCase = mockk()
 
-        viewModel(
-            ioDispatcher = testDispatcherRule.testDispatcher,
-            requestFirstPage = request,
-        )
+        viewModel(requestFirstPage = request)
 
         coVerify { request() }
     }
@@ -58,10 +54,7 @@ internal class PlayerListViewModelTest {
     @Test
     fun `should request first page on refresh`() = runTest {
         val request: RequestFirstPagePlayerListUseCase = mockk()
-        val viewModel = viewModel(
-            ioDispatcher = testDispatcherRule.testDispatcher,
-            requestFirstPage = request,
-        )
+        val viewModel = viewModel(requestFirstPage = request)
 
         clearMocks(request, answers = false)
         viewModel.onRefresh()
@@ -89,7 +82,6 @@ internal class PlayerListViewModelTest {
                 every { getString(R.string.player_list_position, "F") } returns "Position: F"
                 every { getString(R.string.player_list_team, "Lakers") } returns "Team: Lakers"
             },
-            ioDispatcher = testDispatcherRule.testDispatcher,
             observePlayerList = observePlayerList,
         )
 
@@ -230,7 +222,6 @@ internal class PlayerListViewModelTest {
             every { getString(any()) } returns ""
             every { getString(any(), any()) } returns ""
         },
-        ioDispatcher: CoroutineContext = testDispatcherRule.testDispatcher,
         requestFirstPage: RequestFirstPagePlayerListUseCase = mockk(relaxUnitFun = true),
         requestNextPage: RequestNextPagePlayerListUseCase = mockk(relaxUnitFun = true),
         observePlayerList: ObservePlayerListUseCase = mockk {
@@ -240,7 +231,10 @@ internal class PlayerListViewModelTest {
         navigation: PlayerListNavigationController = mockk(relaxUnitFun = true),
     ) = PlayerListViewModel(
         context = context,
-        ioDispatcher = IoDispatcher(ioDispatcher),
+        dispatchers = AppDispatchers(
+            main = testDispatcherRule.testDispatcher,
+            io = testDispatcherRule.testDispatcher,
+        ),
         requestFirstPage = requestFirstPage,
         requestNextPage = requestNextPage,
         observePlayerList = observePlayerList,

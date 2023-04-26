@@ -1,6 +1,6 @@
 package com.pavelrorecek.core.network.di
 
-import com.pavelrorecek.core.network.data.IoDispatcher
+import com.pavelrorecek.core.network.platform.AppDispatchers
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,7 +10,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 public val coreNetworkModule: Module = module {
-    factory { IoDispatcher(Dispatchers.IO) }
+    factory {
+        AppDispatchers(
+            main = Dispatchers.Main,
+            io = Dispatchers.IO,
+        )
+    }
     factory {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
