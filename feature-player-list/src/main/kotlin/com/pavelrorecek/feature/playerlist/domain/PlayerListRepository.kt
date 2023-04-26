@@ -13,7 +13,7 @@ internal interface PlayerListRepository {
 
         data class Loading(val previousPages: List<Page>) : PlayerList()
         data class Loaded(val pages: List<Page>) : PlayerList()
-        object Failure : PlayerList()
+        data class Failure(val previousPages: List<Page>) : PlayerList()
 
         data class Page(val playerList: List<Player>)
     }

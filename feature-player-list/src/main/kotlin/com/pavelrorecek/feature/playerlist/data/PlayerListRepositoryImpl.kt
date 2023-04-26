@@ -6,6 +6,7 @@ import com.pavelrorecek.core.player.data.PlayerListResponseDto.PlayerDto
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList
+import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Page
@@ -21,8 +22,13 @@ internal class PlayerListRepositoryImpl(
 
     override suspend fun requestFirstPage() {
         playerList.value = Loading(previousPages = emptyList())
-        val response = api.loadPlayers(FIRST_PAGE, PER_PAGE)
-        playerList.value = Loaded(pages = listOf(toDomain(response)))
+        val response = runCatching { api.loadPlayers(FIRST_PAGE, PER_PAGE) }.getOrNull()
+
+        playerList.value = if (response != null) {
+            Loaded(pages = listOf(toDomain(response)))
+        } else {
+            Failure(emptyList())
+        }
     }
 
     private fun toDomain(dto: PlayerListResponseDto) = dto.data
@@ -55,8 +61,19 @@ internal class PlayerListRepositoryImpl(
     override suspend fun requestNextPage() {
         val previousPages = (playerList.value as? Loaded)?.pages.orEmpty()
         playerList.value = Loading(previousPages = previousPages)
-        val response = api.loadPlayers(page = previousPages.size, perPage = PER_PAGE)
-        playerList.value = Loaded(pages = previousPages + listOf(toDomain(response)))
+
+        val response = runCatching {
+            api.loadPlayers(
+                page = previousPages.size,
+                perPage = PER_PAGE,
+            )
+        }.getOrNull()
+
+        playerList.value = if (response != null) {
+            Loaded(pages = previousPages + listOf(toDomain(response)))
+        } else {
+            Failure(previousPages = previousPages)
+        }
     }
 
     override fun observe(): Flow<PlayerList> = playerList.filterNotNull()
