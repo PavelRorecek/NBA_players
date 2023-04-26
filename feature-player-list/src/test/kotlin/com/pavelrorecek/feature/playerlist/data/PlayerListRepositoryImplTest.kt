@@ -152,7 +152,7 @@ internal class PlayerListRepositoryImplTest {
             awaitItem() // drop last loaded state
             repository.requestNextPage()
             awaitItem() shouldBe Loading(
-                previousPages = listOf(
+                pages = listOf(
                     PlayerListRepository.PlayerList.Page(
                         playerList = listOf(
                             Player(
@@ -215,7 +215,7 @@ internal class PlayerListRepositoryImplTest {
             repository.requestNextPage()
             awaitItem() // drop loading state
             awaitItem() shouldBe Failure(
-                previousPages = listOf(
+                pages = listOf(
                     PlayerListRepository.PlayerList.Page(
                         playerList = listOf(
                             Player(

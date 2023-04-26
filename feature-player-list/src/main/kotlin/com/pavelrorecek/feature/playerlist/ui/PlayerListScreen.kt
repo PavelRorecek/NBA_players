@@ -30,6 +30,7 @@ import com.pavelrorecek.core.design.AppTheme
 import com.pavelrorecek.core.design.BaseScreen
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.feature.playerlist.presentation.PlayerListViewModel
+import com.pavelrorecek.feature.playerlist.presentation.PlayerListViewModel.State
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -47,13 +48,14 @@ public fun PlayerListScreen() {
 
 @Composable
 internal fun PlayerListScreen(
-    state: PlayerListViewModel.State,
+    state: State,
     onRefresh: () -> Unit,
     onEndReached: () -> Unit,
     onPlayer: (Player) -> Unit,
 ) {
     BaseScreen {
         Scaffold(
+            modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(title = { Text(text = state.title) })
             },
@@ -80,7 +82,9 @@ internal fun PlayerListScreen(
                                         modifier = Modifier.padding(8.dp),
                                     ) {
                                         Text(text = player.name, fontWeight = Bold)
-                                        Spacer(modifier = Modifier.height(8.dp))
+                                        if (player.isPositionVisible || player.isTeamVisible) {
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                        }
                                         if (player.isPositionVisible) Text(text = player.position)
                                         if (player.isTeamVisible) Text(text = player.teamName)
                                     }
@@ -96,6 +100,18 @@ internal fun PlayerListScreen(
                                     contentAlignment = Alignment.Center,
                                 ) {
                                     CircularProgressIndicator()
+                                }
+                            }
+                        }
+                        if (state.isErrorVisible) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(32.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(text = state.errorMessage)
                                 }
                             }
                         }
@@ -116,12 +132,109 @@ internal fun PlayerListScreen(
 @Composable
 @Suppress("UnusedPrivateMember")
 private fun PlayerListWithItems() {
+    val playerList: List<State.PlayerState> = listOf(
+        samplePlayerState(
+            model = samplePlayerModel(0),
+            name = "John Doe",
+            position = "A",
+            isPositionVisible = true,
+            isTeamVisible = true,
+            teamName = "Lakers",
+        ),
+        samplePlayerState(
+            model = samplePlayerModel(1),
+            name = "Jane Doe",
+            isPositionVisible = false,
+            isTeamVisible = false,
+        ),
+    )
+
     AppTheme {
         PlayerListScreen(
-            state = PlayerListViewModel.State("NBA Players"),
+            state = sampleState(
+                title = "NBA Players",
+                playerList = playerList,
+            ),
             onRefresh = {},
             onEndReached = {},
             onPlayer = {},
         )
     }
 }
+
+@Preview
+@Composable
+@Suppress("UnusedPrivateMember")
+private fun PlayerListWithError() {
+    val playerList: List<State.PlayerState> = listOf(
+        samplePlayerState(
+            model = samplePlayerModel(0),
+            name = "John Doe",
+            position = "A",
+            isPositionVisible = true,
+            isTeamVisible = true,
+            teamName = "Lakers",
+        ),
+        samplePlayerState(
+            model = samplePlayerModel(1),
+            name = "Jane Doe",
+            isPositionVisible = false,
+            isTeamVisible = false,
+        ),
+    )
+
+    AppTheme {
+        PlayerListScreen(
+            state = sampleState(
+                title = "NBA Players",
+                playerList = playerList,
+                errorMessage = "Error while loading.",
+                isErrorVisible = true,
+            ),
+            onRefresh = {},
+            onEndReached = {},
+            onPlayer = {},
+        )
+    }
+}
+
+private fun samplePlayerModel(id: Int) = Player(
+    id = Player.Id(value = id),
+    firstName = "Lupe Guy",
+    lastName = "Christa Best",
+    position = null,
+    heightFeet = null,
+    heightInches = null,
+    weightPounds = null,
+    team = null,
+)
+
+private fun samplePlayerState(
+    model: Player,
+    name: String,
+    position: String = "",
+    isPositionVisible: Boolean,
+    isTeamVisible: Boolean,
+    teamName: String = "",
+) = State.PlayerState(
+    model = model,
+    name = name,
+    position = position,
+    isPositionVisible = isPositionVisible,
+    isTeamVisible = isTeamVisible,
+    teamName = teamName,
+)
+
+private fun sampleState(
+    title: String,
+    playerList: List<State.PlayerState> = emptyList(),
+    isLoadingVisible: Boolean = false,
+    isErrorVisible: Boolean = false,
+    errorMessage: String = "Error",
+) = State(
+    title = title,
+    playerList = playerList,
+    isLoadingVisible = isLoadingVisible,
+    isErrorVisible = isErrorVisible,
+    errorMessage = errorMessage,
+)

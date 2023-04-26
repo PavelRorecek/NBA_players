@@ -10,6 +10,7 @@ import com.pavelrorecek.core.test.TestDispatcherRule
 import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
+import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Page
@@ -34,12 +35,23 @@ internal class PlayerListViewModelTest {
     @Test
     fun `should map title to state`() = runTest {
         val viewModel = viewModel(
-            context = mockk {
+            context = mockk(relaxed = true) {
                 every { getString(R.string.player_list_title) } returns "Title"
             },
         )
 
         viewModel.state.value.title shouldBe "Title"
+    }
+
+    @Test
+    fun `should map error message to state`() = runTest {
+        val viewModel = viewModel(
+            context = mockk(relaxed = true) {
+                every { getString(R.string.player_list_loading_error) } returns "Error"
+            },
+        )
+
+        viewModel.state.value.errorMessage shouldBe "Error"
     }
 
     @Test
@@ -148,7 +160,7 @@ internal class PlayerListViewModelTest {
     @Test
     fun `should show loading when loading new list`() = runTest {
         val observePlayerList: ObservePlayerListUseCase = mockk {
-            every { this@mockk.invoke() } returns flowOf(Loading(previousPages = emptyList()))
+            every { this@mockk.invoke() } returns flowOf(Loading(pages = emptyList()))
         }
         val viewModel = viewModel(observePlayerList = observePlayerList)
 
@@ -163,6 +175,26 @@ internal class PlayerListViewModelTest {
         val viewModel = viewModel(observePlayerList = observePlayerList)
 
         viewModel.state.value.isLoadingVisible shouldBe false
+    }
+
+    @Test
+    fun `should show error when when list loading fails`() = runTest {
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(Failure(pages = emptyList()))
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.isErrorVisible shouldBe true
+    }
+
+    @Test
+    fun `should not show error when list is loaded`() = runTest {
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(Loaded(pages = emptyList()))
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.isErrorVisible shouldBe false
     }
 
     @Test

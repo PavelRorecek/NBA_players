@@ -21,7 +21,7 @@ internal class PlayerListRepositoryImpl(
     private val playerList = MutableStateFlow<PlayerList?>(null)
 
     override suspend fun requestFirstPage() {
-        playerList.value = Loading(previousPages = emptyList())
+        playerList.value = Loading(pages = emptyList())
         val response = runCatching { api.loadPlayers(FIRST_PAGE, PER_PAGE) }.getOrNull()
 
         playerList.value = if (response != null) {
@@ -59,8 +59,8 @@ internal class PlayerListRepositoryImpl(
     }
 
     override suspend fun requestNextPage() {
-        val previousPages = (playerList.value as? Loaded)?.pages.orEmpty()
-        playerList.value = Loading(previousPages = previousPages)
+        val previousPages = playerList.value?.pages.orEmpty()
+        playerList.value = Loading(pages = previousPages)
 
         val response = runCatching {
             api.loadPlayers(
@@ -72,7 +72,7 @@ internal class PlayerListRepositoryImpl(
         playerList.value = if (response != null) {
             Loaded(pages = previousPages + listOf(toDomain(response)))
         } else {
-            Failure(previousPages = previousPages)
+            Failure(pages = previousPages)
         }
     }
 

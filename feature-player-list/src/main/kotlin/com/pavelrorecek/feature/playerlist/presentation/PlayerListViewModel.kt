@@ -10,7 +10,6 @@ import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
-import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loaded
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Loading
 import com.pavelrorecek.feature.playerlist.domain.RequestFirstPagePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.RequestNextPagePlayerListUseCase
@@ -31,7 +30,10 @@ internal class PlayerListViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        State(title = context.getString(R.string.player_list_title)),
+        State(
+            title = context.getString(R.string.player_list_title),
+            errorMessage = context.getString(R.string.player_list_loading_error),
+        ),
     )
     val state: StateFlow<State> = _state
 
@@ -42,15 +44,10 @@ internal class PlayerListViewModel(
         viewModelScope.launch(dispatchers.io) { requestFirstPage() }
         viewModelScope.launch(dispatchers.main) {
             observePlayerList().collect { result ->
-                val playerList = when (result) {
-                    is Loading -> result.previousPages
-                    is Loaded -> result.pages
-                    is Failure -> emptyList()
-                }.flatMap { it.playerList }
-
                 _state.value = _state.value.copy(
-                    playerList = playerList.map(::toState),
+                    playerList = result.pages.flatMap { it.playerList }.map(::toState),
                     isLoadingVisible = result is Loading,
+                    isErrorVisible = result is Failure,
                 )
             }
         }
@@ -81,10 +78,7 @@ internal class PlayerListViewModel(
     fun onEndReached() {
         if (nextPageRequestJob != null) return
         nextPageRequestJob = viewModelScope.launch(dispatchers.io) {
-            val isAtLeastOnePageLoaded = (observePlayerList().first() as? Loaded)
-                ?.pages
-                .orEmpty()
-                .isNotEmpty()
+            val isAtLeastOnePageLoaded = observePlayerList().first().pages.isNotEmpty()
             if (isAtLeastOnePageLoaded) requestNextPage()
 
             nextPageRequestJob = null
@@ -95,6 +89,8 @@ internal class PlayerListViewModel(
         val title: String,
         val playerList: List<PlayerState> = emptyList(),
         val isLoadingVisible: Boolean = true,
+        val isErrorVisible: Boolean = false,
+        val errorMessage: String,
     ) {
 
         data class PlayerState(
