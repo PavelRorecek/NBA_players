@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pavelrorecek.feature.playerdetail"
+    namespace = "com.pavelrorecek.feature.teamdetail"
 }
 
 dependencies {

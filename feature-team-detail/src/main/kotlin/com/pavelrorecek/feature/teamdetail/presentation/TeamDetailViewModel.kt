@@ -1,14 +1,12 @@
 package com.pavelrorecek.feature.teamdetail.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
-import com.pavelrorecek.feature.playerdetail.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal class TeamDetailViewModel(
-    context: Context,
+    strings: TeamDetailStrings,
     loadPlayer: LoadCurrentPlayerUseCase,
 ) : ViewModel() {
 
@@ -19,16 +17,13 @@ internal class TeamDetailViewModel(
         val team = checkNotNull(loadPlayer().team)
         _state = MutableStateFlow(
             State(
-                title = team.name.orEmpty(),
-                city = context.getString(R.string.team_detail_city, team.city),
-                conference = context.getString(R.string.team_detail_conference, team.conference),
-                abbreviation = context.getString(
-                    R.string.team_detail_abbreviation,
-                    team.abbreviation,
-                ),
-                division = context.getString(R.string.team_detail_division, team.division),
-                fullName = context.getString(R.string.team_detail_full_name, team.fullName),
-                name = context.getString(R.string.team_detail_name, team.name),
+                title = strings.title(team.name.orEmpty()),
+                city = strings.city(team.city.orEmpty()),
+                conference = strings.conference(team.conference.orEmpty()),
+                abbreviation = strings.abbreviation(team.abbreviation.orEmpty()),
+                division = strings.division(team.division.orEmpty()),
+                fullName = strings.fullName(team.fullName.orEmpty()),
+                name = strings.name(team.name.orEmpty()),
             ),
         )
         state = _state

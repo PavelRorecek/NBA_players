@@ -1,10 +1,8 @@
 package com.pavelrorecek.feature.teamdetail.presentation
 
-import android.content.Context
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.player
 import com.pavelrorecek.core.player.model.team
-import com.pavelrorecek.feature.playerdetail.R
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -27,32 +25,25 @@ internal class TeamDetailViewModelTest {
         val loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player(team = team(name = "Lakers"))
         }
-        val viewModel = viewModel(loadPlayer = loadPlayer)
+        val viewModel = viewModel(
+            strings = mockk(relaxed = true) {
+                every { title("Lakers") } returns "Title"
+            },
+            loadPlayer = loadPlayer,
+        )
 
-        viewModel.state.value.title shouldBe "Lakers"
+        viewModel.state.value.title shouldBe "Title"
     }
 
     @Test
     fun `should map team to state`() {
-        val context: Context = mockk {
-            every {
-                getString(R.string.team_detail_city, "Los Angeles")
-            } returns "City: Los Angeles"
-            every {
-                getString(R.string.team_detail_conference, "West")
-            } returns "Conference: West"
-            every {
-                getString(R.string.team_detail_abbreviation, "LAL")
-            } returns "Abbreviation: LAL"
-            every {
-                getString(R.string.team_detail_division, "Pacific")
-            } returns "Division: Pacific"
-            every {
-                getString(R.string.team_detail_full_name, "Los Angeles Lakers")
-            } returns "Full name: Los Angeles Lakers"
-            every {
-                getString(R.string.team_detail_name, "Lakers")
-            } returns "Name: Lakers"
+        val strings: TeamDetailStrings = mockk(relaxed = true) {
+            every { city("Los Angeles") } returns "City: Los Angeles"
+            every { conference("West") } returns "Conference: West"
+            every { abbreviation("LAL") } returns "Abbreviation: LAL"
+            every { division("Pacific") } returns "Division: Pacific"
+            every { fullName("Los Angeles Lakers") } returns "Full name: Los Angeles Lakers"
+            every { name("Lakers") } returns "Name: Lakers"
         }
         val loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player(
@@ -67,7 +58,7 @@ internal class TeamDetailViewModelTest {
             )
         }
         val viewModel = viewModel(
-            context = context,
+            strings = strings,
             loadPlayer = loadPlayer,
         )
 
@@ -82,12 +73,12 @@ internal class TeamDetailViewModelTest {
     }
 
     private fun viewModel(
-        context: Context = mockk { every { getString(any(), any()) } returns "" },
+        strings: TeamDetailStrings = mockk(relaxed = true),
         loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player()
         },
     ) = TeamDetailViewModel(
-        context = context,
+        strings = strings,
         loadPlayer = loadPlayer,
     )
 }
