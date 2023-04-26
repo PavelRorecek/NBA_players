@@ -1,13 +1,11 @@
 package com.pavelrorecek.feature.playerlist.presentation
 
-import android.content.Context
 import com.pavelrorecek.core.network.platform.AppDispatchers
 import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
 import com.pavelrorecek.core.player.model.player
 import com.pavelrorecek.core.player.model.team
 import com.pavelrorecek.core.test.TestDispatcherRule
-import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
@@ -35,9 +33,7 @@ internal class PlayerListViewModelTest {
     @Test
     fun `should map title to state`() = runTest {
         val viewModel = viewModel(
-            context = mockk(relaxed = true) {
-                every { getString(R.string.player_list_title) } returns "Title"
-            },
+            strings = mockk(relaxed = true) { every { title() } returns "Title" },
         )
 
         viewModel.state.value.title shouldBe "Title"
@@ -46,9 +42,7 @@ internal class PlayerListViewModelTest {
     @Test
     fun `should map error message to state`() = runTest {
         val viewModel = viewModel(
-            context = mockk(relaxed = true) {
-                every { getString(R.string.player_list_loading_error) } returns "Error"
-            },
+            strings = mockk(relaxed = true) { every { errorMessage() } returns "Error" },
         )
 
         viewModel.state.value.errorMessage shouldBe "Error"
@@ -89,11 +83,12 @@ internal class PlayerListViewModelTest {
             )
         }
         val viewModel = viewModel(
-            context = mockk {
-                every { getString(any()) } returns ""
-                every { getString(R.string.player_list_position, "F") } returns "Position: F"
-                every { getString(R.string.player_list_team, "Lakers") } returns "Team: Lakers"
+            strings = mockk(relaxed = true) {
+                every { name("John", "Doe") } returns "John Doe"
+                every { position("F") } returns "Position: F"
+                every { teamName("Lakers") } returns "Team: Lakers"
             },
+
             observePlayerList = observePlayerList,
         )
 
@@ -250,10 +245,7 @@ internal class PlayerListViewModelTest {
     }
 
     private fun viewModel(
-        context: Context = mockk {
-            every { getString(any()) } returns ""
-            every { getString(any(), any()) } returns ""
-        },
+        strings: PlayerListStrings = mockk(relaxed = true),
         requestFirstPage: RequestFirstPagePlayerListUseCase = mockk(relaxUnitFun = true),
         requestNextPage: RequestNextPagePlayerListUseCase = mockk(relaxUnitFun = true),
         observePlayerList: ObservePlayerListUseCase = mockk {
@@ -262,7 +254,7 @@ internal class PlayerListViewModelTest {
         storePlayer: StoreCurrentPlayerUseCase = mockk(relaxed = true),
         navigation: PlayerListNavigationController = mockk(relaxUnitFun = true),
     ) = PlayerListViewModel(
-        context = context,
+        strings = strings,
         dispatchers = AppDispatchers(
             main = testDispatcherRule.testDispatcher,
             io = testDispatcherRule.testDispatcher,

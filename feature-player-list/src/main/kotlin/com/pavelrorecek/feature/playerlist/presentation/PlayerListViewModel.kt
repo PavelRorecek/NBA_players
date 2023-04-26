@@ -1,12 +1,10 @@
 package com.pavelrorecek.feature.playerlist.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pavelrorecek.core.network.platform.AppDispatchers
 import com.pavelrorecek.core.player.domain.StoreCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.Player
-import com.pavelrorecek.feature.playerlist.R
 import com.pavelrorecek.feature.playerlist.domain.ObservePlayerListUseCase
 import com.pavelrorecek.feature.playerlist.domain.PlayerListNavigationController
 import com.pavelrorecek.feature.playerlist.domain.PlayerListRepository.PlayerList.Failure
@@ -20,7 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 internal class PlayerListViewModel(
-    private val context: Context,
+    private val strings: PlayerListStrings,
     private val dispatchers: AppDispatchers,
     private val requestFirstPage: RequestFirstPagePlayerListUseCase,
     private val requestNextPage: RequestNextPagePlayerListUseCase,
@@ -31,8 +29,8 @@ internal class PlayerListViewModel(
 
     private val _state = MutableStateFlow(
         State(
-            title = context.getString(R.string.player_list_title),
-            errorMessage = context.getString(R.string.player_list_loading_error),
+            title = strings.title(),
+            errorMessage = strings.errorMessage(),
         ),
     )
     val state: StateFlow<State> = _state
@@ -56,9 +54,9 @@ internal class PlayerListViewModel(
     private fun toState(model: Player) = State.PlayerState(
         model = model,
         name = "${model.firstName} ${model.lastName}",
-        position = context.getString(R.string.player_list_position, model.position),
+        position = strings.position(model.position.orEmpty()),
         isPositionVisible = !model.position.isNullOrEmpty(),
-        teamName = context.getString(R.string.player_list_team, model.team?.name),
+        teamName = strings.teamName(model.team?.name.orEmpty()),
         isTeamVisible = model.team != null,
     )
 
