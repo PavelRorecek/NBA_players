@@ -1,15 +1,13 @@
 package com.pavelrorecek.feature.playerdetail.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
-import com.pavelrorecek.feature.playerdetail.R
 import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal class PlayerDetailViewModel(
-    context: Context,
+    strings: PlayerDetailStrings,
     loadPlayer: LoadCurrentPlayerUseCase,
     private val navigation: PlayerDetailNavigationController,
 ) : ViewModel() {
@@ -21,24 +19,22 @@ internal class PlayerDetailViewModel(
         val player = loadPlayer()
         _state = MutableStateFlow(
             State(
-                title = context.getString(
-                    R.string.player_detail_fullname,
+                title = strings.title(
                     player.firstName,
                     player.lastName,
                 ),
-                firstName = context.getString(R.string.player_detail_firstname, player.firstName),
-                lastName = context.getString(R.string.player_detail_lastname, player.lastName),
-                position = context.getString(R.string.player_detail_position, player.position),
+                firstName = strings.firstName(player.firstName),
+                lastName = strings.lastName(player.lastName),
+                position = strings.position(player.position.orEmpty()),
                 isPositionVisible = !player.position.isNullOrEmpty(),
-                height = context.getString(
-                    R.string.player_detail_height,
-                    player.heightFeet,
-                    player.heightInches,
+                height = strings.height(
+                    heightFeet = player.heightFeet ?: 0,
+                    heightInches = player.heightInches ?: 0,
                 ),
                 isHeightVisible = player.heightFeet != null && player.heightInches != null,
-                weight = context.getString(R.string.player_detail_weight, player.weightPounds),
+                weight = strings.weight(player.weightPounds ?: 0),
                 isWeightVisible = player.weightPounds != null,
-                team = context.getString(R.string.player_detail_team, player.team?.name.orEmpty()),
+                team = strings.teamName(player.team?.name.orEmpty()),
                 isTeamVisible = player.team != null,
             ),
         )

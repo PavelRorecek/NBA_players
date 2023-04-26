@@ -1,10 +1,8 @@
 package com.pavelrorecek.feature.playerdetail.presentation
 
-import android.content.Context
 import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.player
 import com.pavelrorecek.core.player.model.team
-import com.pavelrorecek.feature.playerdetail.R
 import com.pavelrorecek.feature.playerdetail.domain.PlayerDetailNavigationController
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -16,37 +14,28 @@ internal class PlayerDetailViewModelTest {
 
     @Test
     fun `should map player name to title`() {
-        val context: Context = mockk {
-            every { getString(any(), any()) } returns ""
-            every { getString(any(), any(), any()) } returns ""
-            every { getString(R.string.player_detail_fullname, "John", "Doe") } returns "John Doe"
-        }
-        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
-            every { this@mockk.invoke() } returns player(
-                firstName = "John",
-                lastName = "Doe",
-            )
-        }
         val viewModel = viewModel(
-            context = context,
-            loadPlayer = loadPlayer,
+            strings = mockk(relaxed = true) { every { title("John", "Doe") } returns "Title" },
+            loadPlayer = mockk {
+                every { this@mockk.invoke() } returns player(
+                    firstName = "John",
+                    lastName = "Doe",
+                )
+            },
         )
 
-        viewModel.state.value.title shouldBe "John Doe"
+        viewModel.state.value.title shouldBe "Title"
     }
 
     @Test
     fun `should map player to state`() {
-        val context: Context = mockk {
-            every { getString(any(), any(), any()) } returns ""
-            every { getString(R.string.player_detail_firstname, "John") } returns "Firstname: John"
-            every { getString(R.string.player_detail_lastname, "Doe") } returns "Lastname: Doe"
-            every { getString(R.string.player_detail_position, "F") } returns "Position: F"
-            every {
-                getString(R.string.player_detail_height, 5, 11)
-            } returns "Height: 5 feet 11 inches"
-            every { getString(R.string.player_detail_weight, 42) } returns "Weight: 42"
-            every { getString(R.string.player_detail_team, "Lakers") } returns "Team: Lakers"
+        val strings: PlayerDetailStrings = mockk(relaxed = true) {
+            every { firstName("John") } returns "Firstname: John"
+            every { lastName("Doe") } returns "Lastname: Doe"
+            every { position("F") } returns "Position: F"
+            every { height(5, 11) } returns "Height: 5 feet 11 inches"
+            every { weight(42) } returns "Weight: 42"
+            every { teamName("Lakers") } returns "Team: Lakers"
         }
         val loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player(
@@ -60,7 +49,7 @@ internal class PlayerDetailViewModelTest {
             )
         }
         val viewModel = viewModel(
-            context = context,
+            strings = strings,
             loadPlayer = loadPlayer,
         )
 
@@ -165,16 +154,13 @@ internal class PlayerDetailViewModelTest {
     }
 
     private fun viewModel(
-        context: Context = mockk {
-            every { getString(any(), any()) } returns ""
-            every { getString(any(), any(), any()) } returns ""
-        },
+        strings: PlayerDetailStrings = mockk(relaxed = true),
         loadPlayer: LoadCurrentPlayerUseCase = mockk {
             every { this@mockk.invoke() } returns player()
         },
         navigation: PlayerDetailNavigationController = mockk(relaxUnitFun = true),
     ) = PlayerDetailViewModel(
-        context = context,
+        strings = strings,
         loadPlayer = loadPlayer,
         navigation = navigation,
     )
