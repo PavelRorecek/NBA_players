@@ -11,6 +11,6 @@ dependencies {
     implementation(project(":core-design"))
     implementation(project(":core-network"))
     implementation(project(":core-player"))
-    testImplementation(project(":core-player-fixtures"))
+    testImplementation(project(":core-player-test-fixtures"))
     testImplementation(project(":core-test"))
 }
