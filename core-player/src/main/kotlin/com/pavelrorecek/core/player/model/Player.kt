@@ -8,7 +8,7 @@ public data class Player(
     val heightFeet: Int?,
     val heightInches: Int?,
     val weightPounds: Int?,
-    val team: Team,
+    val team: Team?,
 ) {
     @JvmInline
     public value class Id(public val value: Int)

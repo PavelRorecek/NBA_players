@@ -39,14 +39,16 @@ internal class PlayerListRepositoryImpl(
             heightFeet = dto.heightFeet,
             heightInches = dto.heightInches,
             weightPounds = dto.weightPounds,
-            team = Player.Team(
-                name = dto.team?.name,
-                fullName = dto.team?.fullName,
-                abbreviation = dto.team?.abbreviation,
-                city = dto.team?.city,
-                conference = dto.team?.conference,
-                division = dto.team?.division,
-            ),
+            team = dto.team?.let { teamDto ->
+                Player.Team(
+                    name = teamDto.name,
+                    fullName = teamDto.fullName,
+                    abbreviation = teamDto.abbreviation,
+                    city = teamDto.city,
+                    conference = teamDto.conference,
+                    division = teamDto.division,
+                )
+            },
         )
     }
 

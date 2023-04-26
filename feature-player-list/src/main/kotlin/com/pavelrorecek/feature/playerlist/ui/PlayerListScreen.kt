@@ -82,7 +82,7 @@ internal fun PlayerListScreen(
                                         Text(text = player.name, fontWeight = Bold)
                                         Spacer(modifier = Modifier.height(8.dp))
                                         if (player.isPositionVisible) Text(text = player.position)
-                                        Text(text = player.teamName)
+                                        if (player.isTeamVisible) Text(text = player.teamName)
                                     }
                                 }
                             }

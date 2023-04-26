@@ -26,7 +26,7 @@ public fun player(
     heightFeet: Int? = 5,
     heightInches: Int? = 11,
     weightPounds: Int? = 42,
-    team: Team = team(),
+    team: Team? = team(),
 ): Player = Player(
     id = id,
     firstName = firstName,

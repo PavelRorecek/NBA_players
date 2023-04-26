@@ -135,6 +135,26 @@ internal class PlayerDetailViewModelTest {
     }
 
     @Test
+    fun `should show team when it is not missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(team = team())
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isTeamVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide team when it is missing`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(team = null)
+        }
+        val viewModel = viewModel(loadPlayer = loadPlayer)
+
+        viewModel.state.value.isTeamVisible shouldBe false
+    }
+
+    @Test
     fun `should navigate to team detail`() {
         val navigation: PlayerDetailNavigationController = mockk(relaxUnitFun = true)
         val viewModel = viewModel(navigation = navigation)

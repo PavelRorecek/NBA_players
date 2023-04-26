@@ -16,7 +16,7 @@ internal class TeamDetailViewModel(
     val state: StateFlow<State>
 
     init {
-        val team = loadPlayer().team
+        val team = checkNotNull(loadPlayer().team)
         _state = MutableStateFlow(
             State(
                 title = team.name.orEmpty(),

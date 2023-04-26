@@ -5,12 +5,22 @@ import com.pavelrorecek.core.player.domain.LoadCurrentPlayerUseCase
 import com.pavelrorecek.core.player.model.player
 import com.pavelrorecek.core.player.model.team
 import com.pavelrorecek.feature.playerdetail.R
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
 
 internal class TeamDetailViewModelTest {
+
+    @Test
+    fun `should throw when team is not stored`() {
+        val loadPlayer: LoadCurrentPlayerUseCase = mockk {
+            every { this@mockk.invoke() } returns player(team = null)
+        }
+
+        shouldThrow<IllegalStateException> { viewModel(loadPlayer = loadPlayer) }
+    }
 
     @Test
     fun `should map team name to title`() {

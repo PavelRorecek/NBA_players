@@ -61,7 +61,8 @@ internal class PlayerListViewModel(
         name = "${model.firstName} ${model.lastName}",
         position = context.getString(R.string.player_list_position, model.position),
         isPositionVisible = !model.position.isNullOrEmpty(),
-        teamName = context.getString(R.string.player_list_team, model.team.name),
+        teamName = context.getString(R.string.player_list_team, model.team?.name),
+        isTeamVisible = model.team != null,
     )
 
     fun onPlayer(player: Player) {
@@ -101,6 +102,7 @@ internal class PlayerListViewModel(
             val name: String,
             val position: String,
             val isPositionVisible: Boolean,
+            val isTeamVisible: Boolean,
             val teamName: String,
         )
     }

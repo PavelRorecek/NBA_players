@@ -128,6 +128,32 @@ internal class PlayerListViewModelTest {
     }
 
     @Test
+    fun `should show player team when it is not missing`() = runTest {
+        val player = player(team = team())
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(
+                Loaded(pages = listOf(Page(playerList = listOf(player)))),
+            )
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.playerList.single().isTeamVisible shouldBe true
+    }
+
+    @Test
+    fun `should hide player team when it is missing`() = runTest {
+        val player = player(team = null)
+        val observePlayerList: ObservePlayerListUseCase = mockk {
+            every { this@mockk.invoke() } returns flowOf(
+                Loaded(pages = listOf(Page(playerList = listOf(player)))),
+            )
+        }
+        val viewModel = viewModel(observePlayerList = observePlayerList)
+
+        viewModel.state.value.playerList.single().isTeamVisible shouldBe false
+    }
+
+    @Test
     fun `should show loading when loading new list`() = runTest {
         val observePlayerList: ObservePlayerListUseCase = mockk {
             every { this@mockk.invoke() } returns flowOf(Loading(previousPages = emptyList()))

@@ -38,7 +38,8 @@ internal class PlayerDetailViewModel(
                 isHeightVisible = player.heightFeet != null && player.heightInches != null,
                 weight = context.getString(R.string.player_detail_weight, player.weightPounds),
                 isWeightVisible = player.weightPounds != null,
-                team = context.getString(R.string.player_detail_team, player.team.name),
+                team = context.getString(R.string.player_detail_team, player.team?.name.orEmpty()),
+                isTeamVisible = player.team != null,
             ),
         )
         state = _state
@@ -59,5 +60,6 @@ internal class PlayerDetailViewModel(
         val weight: String,
         val isWeightVisible: Boolean,
         val team: String,
+        val isTeamVisible: Boolean,
     )
 }
