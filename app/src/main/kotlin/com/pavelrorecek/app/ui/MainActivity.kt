@@ -15,9 +15,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.pavelrorecek.app.ui.Screen.PLAYER_DETAIL
 import com.pavelrorecek.app.ui.Screen.PLAYER_LIST
 import com.pavelrorecek.app.ui.Screen.TEAM_DETAIL
@@ -40,9 +40,9 @@ public class MainActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             AppTheme {
-                val navController = rememberAnimatedNavController()
+                val navController = rememberNavController()
 
-                AnimatedNavHost(
+                NavHost(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.background),

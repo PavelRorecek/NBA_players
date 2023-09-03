@@ -11,20 +11,21 @@ buildscript {
 plugins {
     id("com.android.application") version "8.3.0-alpha01" apply false
     id("com.android.library") version "8.3.0-alpha01" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.20" apply false
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("org.jetbrains.kotlin.android") version "1.9.10" apply false
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("com.github.ben-manes.versions") version "0.47.0"
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.1")
 }
 
 detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-    source = files("$projectDir")
-    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
-    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+    buildUponDefaultConfig = true
+    allRules = false
+    source.from(files("$projectDir"))
+    config.from(files("$projectDir/config/detekt.yml"))
+    baseline = file("$projectDir/config/baseline.xml")
 }
 
 tasks.withType<Detekt> {

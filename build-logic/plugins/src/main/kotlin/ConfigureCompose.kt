@@ -25,15 +25,15 @@ internal fun Project.configureCompose(
         }
 
         dependencies {
-            "implementation"("androidx.activity:activity-compose:1.6.1")
-            "implementation"(platform("androidx.compose:compose-bom:2023.01.00"))
-            "implementation"("androidx.compose.ui:ui")
-            "implementation"("androidx.compose.ui:ui-graphics")
-            "implementation"("androidx.compose.ui:ui-tooling-preview")
-            "implementation"("androidx.compose.material:material:1.4.0-alpha03")
-            "debugImplementation"("androidx.compose.ui:ui-tooling")
-            "debugImplementation"("androidx.compose.ui:ui-test-manifest")
-            "implementation"("com.google.accompanist:accompanist-navigation-animation:0.27.1")
+            "implementation"(Dependencies.Compose.activity)
+            "implementation"(platform(Dependencies.Compose.bom))
+            "implementation"(Dependencies.Compose.ui)
+            "implementation"(Dependencies.Compose.uiGraphics)
+            "implementation"(Dependencies.Compose.uiToolingPreview)
+            "implementation"(Dependencies.Compose.material)
+            "implementation"(Dependencies.Accompanist.navigationAnimation)
+            "debugImplementation"(Dependencies.Compose.uiTooling)
+            "debugImplementation"(Dependencies.Compose.uiTestManifest)
         }
     }
 }
